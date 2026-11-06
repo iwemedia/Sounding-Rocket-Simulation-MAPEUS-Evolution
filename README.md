@@ -1,222 +1,179 @@
-#### an interactive command line text adventure and rocket science simulator
-#### inspired by the real-world MORABA.de MAPHEUS-17-Mission 2026
+# 🚀 MAPEUS Sounding Rocket Simulator (OOP-MVC Refactored)
 
-# SOUNDING-ROCKET: Mission Manager Simulator 
-## or "How to build a rocket and fly"
-### Video Demo: https://youtu.be/FKdY5ZgYU5g
-#### Description: An interactive command-line mission control simulation 
-#### inspired by the real-world MAPHEUS research campaigns executed by MORABA.de (Mobile Rocket Base / DLR Germany) 
-#### and the Esrange Space Center in Kiruna, Sweden (ssc Sweden).
+An interactive command-line mission control text adventure and rocket science simulator, inspired by the 
+real-world **MORABA MAPHEUS Missions** executed by the German Aerospace Center (DLR).
 
 ---
 
 ## 💡 Inspiration & Motivation
 
-The core motivation behind this project is deeply personal. I had the unique opportunity to visit 
-the **MORABA (Mobile Rocket Base)** team at the **German Aerospace Center (DLR) in Oberpfaffenhofen** this year.
+The core motivation behind this project is deeply personal. I had the unique opportunity to 
+visit the **MORABA (Mobile Rocket Base)** team at the **German Aerospace Center (DLR) in Oberpfaffenhofen**. 
 During this visit, I conducted **8 extensive interviews** with the team members, focusing heavily on the 
-theme *"How to build a rocket and fly"*, with a special emphasis on making **Women in Science and Technology** visible 
-in there excellence -> **Podcast: Scienckompass *inSTEM**,
+theme *"How to build a rocket and fly"*, with a special emphasis on making **Women in Science and Technology** 
+visible in their engineering excellence. This resulted in the dedicated **Podcast: Scienckompass *inSTEM***.
 
-The invaluable insights, challenges, and engineering principles shared by these scientists, mechanics and engineers 
-are the foundational backbone of this simulator. My goal was to transform their real-world experiences into a playful, 
-educational interactive adventure, making the complex multi-stage campaign planning and scientific mission steps 
-visible and accessible to everyone. By simulating the constraints and decisions they face in real campaigns, 
-this project honors their work and promotes the crucial role of women in aerospace engineering and space exploration.
+The invaluable insights, practical challenges, and systems engineering principles shared by these scientists, 
+mechanics, and aerospace engineers are the foundational backbone of this simulator. 
+While the real-world **MAPHEUS** research campaigns serve as the direct scientific inspiration, this independent 
+simulation game is officially titled **MAPEUS**. This project aims to transform real-world campaign experiences 
+into a playful, educational interactive adventure, making complex multi-stage campaign planning visible and 
+accessible to everyone. By simulating the constraints and decisions faced in real suborbital campaigns, this 
+project honors their work and promotes the crucial role of women in aerospace engineering and space exploration.
 
 ---
 
 ## Project Overview & Core Concept
 
-Every research rocket is unique. Unlike commercial launch vehicles, sounding rockets are modular, custom-built 
-stacks designed to carry varying scientific experiments into microgravity by executing an parabolic flight. 
+Every research rocket is unique. Sounding rockets are modular, custom-built hardware stacks designed to carry varying 
+scientific experiments into microgravity by executing a precise parabolic flight trajectory. 
 
-The **SOUNDING-ROCKET: Mission Manager Simulator** challenges the player to take on the role of an Engineer and Mission Manager. 
-The primary goal is to assemble and safely guide a suborbital rocket through a sequence of engineering and environmental 
-checkpoints to achieve a "VALID MISSION" status, maximize microgravity conditions for scientists, 
-and safely archive the research data and housekeeping data.
+The **MAPEUS Simulator** challenges the player to take on the role of an Aerospace Engineer and Mission Manager. 
+The primary goal is to assemble and safely guide a suborbital rocket through a sequence of engineering, physical, 
+and environmental checkpoints to achieve a "VALID MISSION" status, maximize microgravity conditions for scientists, 
+and safely archive the research data.
 
-### Educational Value
-This project acts as an educational intersection of project management and skills like scientific communication, 
-systems engineering, flight dynamics, and real-world API data integration. 
+### Educational Value & Real-World Skills
+This project acts as an educational intersection of project management, scientific communication, systems engineering, 
+flight dynamics, and real-world API data integration:
+* **Systems Engineering:** Managing rigid physical hardware decks and understanding how individual experiment 
+module selections alter the total vehicle mass and configuration.
+* **Flight Physics:** Understanding spin-stabilization and the mechanical dynamics required to cancel 
+centrifugal forces via deployment cables to achieve near 0 Hz rotation.
+* **Data Integration:** Fetching live meteorological telemetry from a remote REST API to dynamically 
+evaluate launch safety constraints.
 
-Players learn about:
-* **Systems Engineering:** 
-* Managing strict hardware slots and understanding how experiment selection influences total vehicle mass.
-* **Flight Physics:** 
-* Understanding spin-stabilization and the mechanics required to cancel centrifugal forces to achieve near 0 Hz rotation.
-* **Data Integration:** 
-* Fetching real-time weather telemetry from a live REST API to evaluate launch constraints.
 ---
 
 ## 📐 Scientific Formulas & In-Game Rules
 
-To maintain the spirit of a true rocket campaign while keeping the user experience accessible, 
-the suborbital physics calculations were scaled down to focused, intuitive core mechanics:
+To maintain the spirit of a true rocket campaign while keeping the user experience accessible, the suborbital 
+calculations were scaled down to focused, intuitive core mechanics:
 
-### 1. Yo-Yo Despin Balances (Phase 2 Quiz)
-To deploy the chosen experiments safely, the rocket's high rotational velocity must be reduced to approximately 0 Hz. 
-This is achieved by deploying two mechanical counterweights on extendable wires. 
-The game calculates the precise weight per Yo-Yo mass ($m$) using a simplified relationship derived from 
-NASA Technical Note D-3848, based on the total moment of inertia ,
-and by using some base_mass/inhertia approximations based on the MORABA MAPHEUS Missions.
+### 1. Yo-Yo Despin Balances (Phase 2)
+To deploy the chosen experiments safely under microgravity conditions, the rocket's high 
+rotational velocity (approx. 4 Hz) must be reduced to approximately 0 Hz. 
+This is achieved by deploying two mechanical counterweights on extendable wires (Yo-Yo Despin System). 
+The game calculates the precise weight per Yo-Yo mass (m) using a 
+relationship derived from **NASA Technical Note D-3848**, based on the total moment of 
+inertia (\(I_{\text{total}}\)) and the user-selected deployment cable length (L):
 
-(rocket base and scientific payload) 
-($I_{\text{total}}$) 
+\[m = \frac{I_{\text{total}}}{L^2}]
 
-and 
+The player must choose a safe wire length between 0.80 m and 3.00 m and successfully identify the correct 
+mathematically approximated weight from a shuffled list to clear the engineering phase.
 
-the user-selected deployment cable length ($L$):
-
-$$m = \frac{I_{\text{total}}}{L^2 \times 2}$$
-
-The player must choose a safe wire length between 0.80 m and 3.00 m and successfully identify the correct mathematically 
-approximated weight from a shuffled list to clear the engineering phase.
-
-### 2. Microgravity Metric & Telemetry Assessment (Phase 3 & 5)
-In the background, the flight duration and scientific yield scale dynamically based on the weight configuration. 
-The live environment is checked by querying the remote Open-Meteo REST API using the actual geographical coordinates 
-of the **Esrange Launch Site** in Kiruna, Sweden (67.892° N, 21.106° E). 
-
-If the real-time surface wind speed exceeds 30.0 km/h, the launch is automatically scrubbed for safety reasons. 
-If conditions are nominal, the flight triggers an asynchronous double-status bar (Ascent and Descent) before compiling 
-a final flight log.
-
+### 2. Environmental Launch Constraints (Phase 3)
+The live environment is checked by querying the remote **Open-Meteo REST API** using the actual geographical 
+coordinates of the **Esrange Launch Site** in Kiruna, Sweden (67.892° N, 21.106° E). 
+If the real-time surface wind speed exceeds the safety threshold of **30.0 km/h**, 
+the launch is automatically scrubbed.
 
 ---
 
-## Project Idea, Scope Shifts & Design Decisions
+## 🏗️ Architectural Evolution: The Shift to OOP & MVC
 
-### The Architecture vs. CS50 Rules
-The original architecture of this project was intended to be a fully modular software framework, 
-separating data models, terminal viewports, and narrative briefings into independent Python modules. 
+### From Monolith to Clean Separation
+In its initial version, the simulator was built as a monolithic script where data management, UI presentation, and 
+campaign orchestration were tightly coupled. 
 
-However, to strictly comply with the **CS50P submission requirements** (which dictate a single, 
-comprehensive `project.py` entry point accompanied by an automated `test_project.py` suite), 
-the structural design was streamlined. 
-The modular mindset was preserved internally: code blocks are strictly isolated by functionality, 
-clean state variables manage the UI flow.
-Data layers - like the `EXPERIMENTE` dictionary - are separated from the execution logic to ensure parts 
-remain testable via `pytest`.
+In this **major architectural refactoring phase**, the monolith was completely dissolved and rebuilt from 
+scratch following the **Model-View-Controller (MVC)** design pattern and strict Object-Oriented Programming (OOP) 
+principles to power the **MAPEUS** engine:
 
-### Scope Simplifications (Vision vs. Reality)
-To meet tight project deadlines and focus on code stability, several advanced launch variabeles were simplified or 
-automated in the background:
-* **Experiment Dependencies:** 
-* Mutually exclusive hardware combinations were omitted; the mass is calculated completely in the 
-* background based on the payload stack.
-* **Motor Matching:** 
-* Rocket motor stages are not assigned and given as a standard configuration.
-* **Launcher Orientation:** 
-* The aerodynamic tracking and manual rail angle alignment based on crosswinds were abstracted 
-* into automated telemetry checks. 
+* **The Model (`models/`):** Encapsulates core state and domain logic. `Module` represents a single experiment entry, 
+while `Rocket` handles the physical hardware grid, executes gap-closing operations, and tracks active flight metrics.
+* **The View (`views/`):** The `TerminalView` class serves as the **exclusive interface** to the player. 
+It encapsulates all I/O operations (`print`, `rich.panel`, `input`, ASCII banners). The remaining codebase has no 
+dependencies on terminal drawing mechanics.
+* **The Controller (`controllers/`):** The `GameController` class acts as the primary conductor of the campaign 
+timeline. It retrieves data from models/services, passes layout states to the view, and routes user interactions. 
+* **It is 100% free of direct I/O execution.**
 
----
+### Centralized Balance (Single Source of Truth)
+Instead of hardcoding system constants throughout the script, variables like the 
+vehicle dry mass (`ROCKET_BASE_MASS`), structural inertia (`ROCKET_BASE_INERTIA`), and the dynamically 
+computed workbench deck buffer capacity (`MAX_WORKBENCH_SLOTS`) are centralized in the configuration facade layer.
 
-## File Structure 
-
-### 1. `project.py`
-The brain of the application: contains the central loop, user configuration panels and backend 
-physics calculators. 
-
-It relies on the following custom functions:
-*   `clear_screen()`: 
-Cleans the terminal viewport interface using `subprocess` context calls depending on whether 
-the host machine runs on Windows (`nt`) or UNIX environments.
-
-*   `start_payload_stack(experimente)`: 
-Manages the custom dual-panel terminal interface using `rich.columns`. 
-It isolates the hardware constraints by limiting total loaded modules to 10 slots and sanitizing 
-string inputs (`NEXT`, `REMOVE`, or experiment keys).
-
-*   `calculate_rocket_configuration(n_bio, n_tec)`: 
-Handles the vehicle systems engineering math. 
-It aggregates mass layers and applies pre-defined game design constants to establish total moments of inertia 
-($I_{\text{total}}$) for the combined suborbital stack.
-
-*   `run_despin_quiz(i_total)`: 
-Acts as an interactive numerical gate for Phase 2. 
-It checks that the player type proper floating-point values (filtering out comma vs. dot variations) and 
-applies NASA wire dynamics formulas.
-
-*   `fetch_weather_data(lat, lon)`: 
-Manages external REST API connections. 
-It passes coordinates as isolated payload arguments and 
-injects a custom identity header sequence (User-Agent spoofing) to prevent automated request blocking.
-
-*   `extract_wind_speed(weather_data)`: 
-Validates the data contract returned from external servers. 
-It executes key-existence audits prior to running float conversions, shielding the runtime application from crashing.
-
-*   `launch_status_bar(laenge)`: 
-Animates as a dual bar, the real-time, asynchronous progressive status updates (Ascent to apogee and Descent to earth). 
-Utilizes customized printing flush buffers.
-
-*   `archive_mission_data(...)`: 
-Implements data integrity patterns by serializing verified flight logs into structured JSON configurations with 
-timestamps, saved in an automatically generated mission directory.
-
-### 2. `test_project.py`
-
-The automated testing suite validates the calculation engines and 
-data extraction contracts against boundary limits and malformed inputs using `pytest`. 
-
-It covers:
-*   `test_calculate_rocket_configuration()`: 
-Asserts happy-path calculations for exact total system inertia and combined 
-liftoff mass vectors based on module distribution inputs.
-
-*   `test_run_despin_quiz_edge_cases()`: 
-Leverages `unittest.mock.patch` to simulate iterative console inputs, verifying that out-of-bounds wire 
-length entries (e.g., 0.50m or 4.00m) are rejected while valid lengths resolve accurately.
-
-*   `test_extract_wind_speed()` and `test_extract_wind_speed_malformed_data()`: 
-Validates robust API contract failure handling by evaluating standart payloads, empty dictionaries, 
-non-numeric strings (e.g., `"STORM"`), or missing target keys,
-provides a fallback to `DEFAULT_WIND_SPEED`.
-
-*   `test_archive_mission_data()`: 
-Checks OS file generation and file existence, 
-ensuring data serialization correctly stores active experimental arrays in standard JSON format.
-
-### 3. `requirements.txt and Extras
-
-* **`requirements.txt`**: 
-Declares external packages used for advanced terminal styling (`rich`), ASCII title art (`pyfiglet`), 
-and API networking (`requests`).
-
-* **`run_game.bat`**:
-A custom Windows batch script designed to boot up the simulator smoothly using the 
-local isolated virtual environment (`venv`).
+### State-Driven Orchestration (The State Pattern Blueprint)
+To prevent the `GameController` from becoming a bloated state machine or relying on primitive local integers to track 
+timeline progression, the campaign's lifecycle is encapsulated within a dedicated `Mission` state model. 
+This architectural choice implements a foundational blueprint of the **State Pattern**:
+* `self.current_phase`: Encapsulates the exact global state of the mission profile in memory (Phases 0 to 5). 
+It isolates chronological phase-transitions from the central control flow, enabling separate layers 
+(like Views or Services) to dynamically query the active checkpoint.
+* `self.is_valid_mission`: Functions as a centralized boolean safety flag ("Go / No-Go" matrix indicator). 
+It decouples the business logic of environmental and structural constraints (such as API-verified crosswinds or workbench buffer violations) from the orchestrator. If bounds are breached, this state is invalidated, routing the system into recovery contexts and serializing directly into the FAIR-RDM post-flight logs.
 
 ---
 
-## Lessons Learned
+## 📂 File Structure
 
-Realizing this simulator brought several engineering challenges that requiered some 
-problem-solving techniques in syntax:
+```text
 
-1. **The Joy and Pain of Terminal UI (Rich Panels & Progress Bars)**
-   Designing an retro mission-control experience inside a standard command-line interface was a bittersweet engineering 
-   challenge. Utilizing the `rich` library to build side-by-side inventory panels (`Columns`) and multi-line, 
-   asynchronous loading indicators (`launch_status_bar`) brought both immense joy and technical frustration. 
-   Managing terminal widths, handling screen-flushes with `subprocess.run()`, and synchronizing real-time 
-   print buffers without flickering .. a lot of timing and formatting.
-
-2. **Overcoming API Request Blocking (User-Agent Spoofing)**
-   During Phase 3 development, the remote Open-Meteo REST API continuously rejected automated connection 
-   requests from the simulation script, threatening to break the live telemetry system. 
-   By researching HTTP request headers, I implemented a custom identity signature (`headers = {"User-Agent": "..."}`) 
-   that mimics a standard web browser session. This successfully authorized the automated scripts to sync real-time 
-   weather metrics without continuous fallbacks.
+├── requirements.txt       # Centralized package dependencies registry (rich, requests, etc.)
+├── architecture.md        # Complete technical UML class diagram documentation
+├── README.md              # This core project documentation
+│
+├── project.py             # Ultra-lean bootstrapper script (Central entrance hook)
+│
+├── config/
+│   ├── constants.py                    # Centralized game balance & physical constants (SSOT)
+│   └── catalog.py                      # Hardware catalog for available scientific modules
+│
+├── controllers/
+│   └── game_controller.py              # Campaign orchestrator engine driving Phases 0 to 5 (Pure Logic)
+│
+├── views/
+│   ├── terminal_view.py                # Exclusive presentation layer (Rich UI, inputs, animation buffers)
+│
+├── models/
+│   ├── mission.py                      # decoupling state from logic **State Pattern** creates sequence of readable state transitions
+│   ├── module.py                       # Domain model encapsulating single experiment parameters
+│   └── rocket.py                       # State model managing payload stack allocations & gap closures
+│
+├── physics/
+│   ├── de_spin_calculator.py           # NASA Yo-Yo wire dynamics constraints checking
+│   └── mass_properties_calculator.py   # Standalone math engine for inertia matrices
+│
+├── services/
+│   ├── weather_service.py # Network client for live Open-Meteo REST API fetching
+│   └── archive_service.py # Persistent, FAIR-compliant JSON data archiving snapshotter
+│
+└── mission_archive                     # dynamically generated
    
-3. **Robust API Data Contract Validation**
-   To prevent the program from crashing on malformed JSON packages from external servers, I implemented explicit 
-   key-existence audits (`if "current" in weather_data:`) before executing structural type castings 
-   to insulated the data processing pipeline from runtime exceptions.
+```
 
-4. **Data Integrity & UX Error Handling**
-   I gained appreciation for sanitizing user inputs. Since engineering parameters depend on decimal numbers, 
-   I built custom exceptions to filter out regional formatting issues 
-   (such as users typing a German comma `,` instead of a decimal dot `.`) to ensure the mathematical 
-   operations run smoothly without system crashes.
+> 📊 **UML Class Diagram:** A fully detailed, zoomable architectural class diagram mapping all method 
+signatures and properties can be viewed interactively in the browser:
+> 👉 **[View MAPEUS Architecture Diagram in Fullscreen](https://tinyurl.com/mermaidUMLrefactorMMM)**
+
+---
+
+## 🛠️ Lessons Learned & Engineering Insights
+
+1. **The Architectural Design Patterns Triumph (MVC, State & Facade)**
+   Moving away from the single-file monolith highlighted the immense practical value of enterprise design patterns. 
+Orchestrating a clean **Model-View-Controller (MVC)** split successfully isolated tricky terminal presentation 
+behaviors (like `rich.columns` tracking and real-time carriage-return flushing inside the `launch_status_bar`) 
+from baseline control routing. 
+Furthermore, decoupling state from logic via the **State Pattern** (`Mission` class) eliminated hardcoded loop hacks 
+and structural wiggles, turning the campaign into an elegant sequence of readable state transitions. 
+Finally, leveraging the **Facade Pattern** inside package boundaries (such as `physics/__init__.py` 
+using explicit `__all__` interface exposures) hid internal math complexities, providing clean interaction APIs for the orchestrator layer and preventing static analysis warnings.
+
+
+2. **API Identity Verification & User-Agent Spoofing**
+   During Phase 3 development, the remote Open-Meteo REST API continuously rejected automated script headers, 
+throwing connection blockers. By researching client signatures, a structured identity dictionary was injected 
+(`headers = {"User-Agent": "..."}`), successfully authorizing the ground console simulation as a realistic browser 
+session.
+
+3. **Silent Exception Triggers & Strict Data Contracts**
+   To prevent malformed JSON responses from crashing flight operations, explicit key-existence audits were 
+introduced inside the data parsing pipeline prior to executing float castings. If the API feed drops, a robust fallback mechanism seamlessly deploys the centralized `DEFAULT_WIND_SPEED`.
+
+4. **Regional Typography Mapping & Data Integrity**
+   Designing an engineering simulator required strict control over decimal boundaries. Custom input validation 
+sanitizers were built to catch regional formatting anomalies—such as European operators typing a comma `,` instead 
+of a standard mathematical decimal dot `.`—shielding the calculation loops from runtime crashes.
