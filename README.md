@@ -3,7 +3,7 @@
 
 # SOUNDING-ROCKET: Mission Manager Simulator 
 ## or "How to build a rocket and fly"
-### Video Demo: 
+### Video Demo: https://youtu.be/DhDEQ1nyDBU
 #### Description: An interactive command-line mission control simulation 
 #### inspired by the real-world MAPHEUS research campaigns executed by MORABA.de (Mobile Rocket Base / DLR Germany) 
 #### and the Esrange Space Center in Kiruna, Sweden (ssc Sweden).
